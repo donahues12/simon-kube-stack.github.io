@@ -1,5 +1,5 @@
 {{- /*
-Generated from 'node-exporter.rules' group from https://raw.githubusercontent.com/prometheus-operator/kube-prometheus/main/manifests/nodeExporter-prometheusRule.yaml
+Generated from 'node-exporter.rules' group from https://raw.githubusercontent.com/donahues12/kube-prometheus/main/manifests/nodeExporter-prometheusRule.yaml
 Do not change in-place! In order to change this file first read following link:
 https://github.com/prometheus-community/helm-charts/tree/main/charts/kube-prometheus-stack/hack
 */ -}}
@@ -86,4 +86,19 @@ spec:
           rate(node_network_transmit_drop_total{job="node-exporter", device!="lo"}[5m])
         )
       record: instance:node_network_transmit_drop_excluding_lo:rate5m
+    - expr: |-
+        count without(cpu, mode) (
+          node_cpu_seconds_total{job="node-exporter",mode="idle"}
+        )
+      record: instance:extracredit:node_avail_mem
+    - expr: |-
+        (
+          node_memory_MemAvailable_bytes{job="node-exporter"} * on(instance) group_left(nodename) (node_uname_info)
+        )
+      record: instance:extracredit:node_avail_mem
+    - expr: |-
+        (
+          node_memory_MemAvailable_bytes{job="node-exporter"} / count without(cpu, mode) (node_cpu_seconds_total{job="node-exporter",mode="idle"})
+        )
+      record: instance:extracredit:node_mem_by_cpu_core
 {{- end }}
