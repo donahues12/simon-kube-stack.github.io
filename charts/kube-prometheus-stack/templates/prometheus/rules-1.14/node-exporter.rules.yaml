@@ -24,6 +24,12 @@ spec:
   groups:
   - name: node-exporter.rules
     rules:
+    - expr: count without(cpu, mode) ( node_cpu_seconds_total{job="node-exporter",mode="idle"} )
+      record: instance:extracredit:node_avail_mem
+    - expr: ( node_memory_MemAvailable_bytes{job="node-exporter"} * on(instance) group_left(nodename) (node_uname_info) )
+      record: instance:extracredit:node_avail_mem
+    - expr: ( node_memory_MemAvailable_bytes{job="node-exporter"} / count without(cpu, mode) (node_cpu_seconds_total{job="node-exporter",mode="idle"}) )
+      record: instance:extracredit:node_mem_by_cpu_core
     - expr: |-
         count without (cpu, mode) (
           node_cpu_seconds_total{job="node-exporter",mode="idle"}
@@ -59,7 +65,7 @@ spec:
         /
           node_memory_MemTotal_bytes{job="node-exporter"}
         )
-      record: instance:node_memory_utilisation:ratio
+      record: instance:extracredit:node_memory_utilisation:ratio
     - expr: rate(node_vmstat_pgmajfault{job="node-exporter"}[5m])
       record: instance:node_vmstat_pgmajfault:rate5m
     - expr: rate(node_disk_io_time_seconds_total{job="node-exporter", device=~"mmcblk.p.+|nvme.+|rbd.+|sd.+|vd.+|xvd.+|dm-.+|dasd.+"}[5m])
