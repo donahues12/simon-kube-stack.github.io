@@ -96,16 +96,17 @@ additionalPrometheusRulesMap:
 #      rules:
 #      - record: my_record
 #        expr: 100 * my_record
-rule-name:
-    groups:
-    - name: extracredit_rules
-      rules:
-        - expr: count without(cpu, mode) ( node_cpu_seconds_total{job="node-exporter",mode="idle"} )
-          record: instance:extracredit:node_avail_mem
-        - expr: ( node_memory_MemAvailable_bytes{job="node-exporter"} * on(instance) group_left(nodename) (node_uname_info) )
-          record: instance:extracredit:node_avail_mem
-        - expr: ( node_memory_MemAvailable_bytes{job="node-exporter"} / count without(cpu, mode) (node_cpu_seconds_total{job="node-exporter",mode="idle"}) )
-          record: instance:extracredit:node_mem_by_cpu_core
+    rule-name:
+    
+        groups:
+        - name: extracredit_rules
+          rules:
+            - expr: count without(cpu, mode) ( node_cpu_seconds_total{job="node-exporter",mode="idle"} )
+              record: instance:extracredit:node_avail_mem
+            - expr: ( node_memory_MemAvailable_bytes{job="node-exporter"} * on(instance) group_left(nodename) (node_uname_info) )
+              record: instance:extracredit:node_avail_mem
+            - expr: ( node_memory_MemAvailable_bytes{job="node-exporter"} / count without(cpu, mode) (node_cpu_seconds_total{job="node-exporter",mode="idle"}) )
+              record: instance:extracredit:node_mem_by_cpu_core
 
 
 ##
