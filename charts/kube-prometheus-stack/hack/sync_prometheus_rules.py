@@ -45,7 +45,7 @@ charts = [
         'min_kubernetes': '1.14.0-0'
     },
     {
-        'source': 'https://raw.githubusercontent.com/donahues12/kube-prometheus/blob/main/manifests/nodeExporter-prometheusRule.yaml',
+        'source': 'https://raw.githubusercontent.com/donahues12/kube-prometheus/main/manifests/nodeExporter-prometheusRule.yaml',
         'destination': '../templates/prometheus/rules-1.14',
         'min_kubernetes': '1.14.0-0'
     },
